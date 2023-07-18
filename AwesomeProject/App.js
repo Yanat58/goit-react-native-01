@@ -1,30 +1,18 @@
 import { StatusBar } from "expo-status-bar";
-import { ImageBackground, StyleSheet, Text, View } from "react-native";
-import shralers from "./image/bg.jpg";
+import { Platform } from "react-native";
+import { endAsyncEvent } from "react-native/Libraries/Performance/Systrace";
+
 import RegistrationScreen from "./src/Screens/RegistrationScreen";
+import LoginScreen from "./src/Screens/LoginScreen";
 
 export default function App() {
-  return (
-    <View style={styles.container}>
-      <ImageBackground source={shralers} style={styles.imgBg}>
-        <RegistrationScreen />
+  console.log(Platform.OS);
 
-        {/* <StatusBar style="auto" /> */}
-      </ImageBackground>
-    </View>
+  return (
+    <>
+      {/* <RegistrationScreen /> */}
+      <LoginScreen />
+      {/* <StatusBar style="auto" /> */}
+    </>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-  },
-  imgBg: {
-    flex: 1,
-    resizeMode: "cover",
-    display: "flex",
-    // justifyContent: "center",
-    // alignItems: "center",
-  },
-});
