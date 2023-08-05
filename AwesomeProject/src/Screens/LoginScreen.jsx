@@ -32,19 +32,22 @@ export default function LoginScreen() {
 
   const keyboardHide = () => {
     Keyboard.dismiss();
+    console.log(email);
+    console.log(password);
     setEmail("");
     setPassword("");
   };
 
   return (
-    <TouchableWithoutFeedback onPress={keyboardHide}>
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <View style={styles.container}>
         <ImageBackground source={wallpaper} style={styles.imgBg}>
           <KeyboardAvoidingView
-            behavior={Platform.OS === "ios" ? "padding" : "height"}
-            keyboardVerticalOffset={Platform.OS === "ios" ? -97 : -80}
-            enable
+            // behavior={Platform.OS === "ios" ? "padding" : "height"}
+            // keyboardVerticalOffset={Platform.OS === "ios" ? -97 : -80}
+            // enable
           >
+            <ScrollView>
             <View style={styles.formBox}>
               <Text style={styles.title}>Sing in</Text>
               <View
@@ -107,6 +110,7 @@ export default function LoginScreen() {
                 </Text>
               </View>
             </View>
+            </ScrollView>
           </KeyboardAvoidingView>
         </ImageBackground>
       </View>

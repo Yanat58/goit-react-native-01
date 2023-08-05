@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
   KeyboardAvoidingView,
   Keyboard,
+  ScrollView,
   TouchableWithoutFeedback,
   Pressable,
   useWindowDimensions,
@@ -18,11 +19,10 @@ import avatar from "../../assets/avatar.jpg";
 import open from "../../assets/open.png";
 import close from "../../assets/close.png";
 import { AntDesign } from "@expo/vector-icons";
-import symbolicateStackTrace from "react-native/Libraries/Core/Devtools/symbolicateStackTrace";
+
 
 export default function RegistrationScreen() {
-  const { height, width } = useWindowDimensions();
-  console.log(height, width);
+  const { height, width } = useWindowDimensions();  
 
   const [login, setLogin] = useState("");
   const [email, setEmail] = useState("");
@@ -34,8 +34,12 @@ export default function RegistrationScreen() {
     setPasswordHide(!passwordHide);
   };
 
+
   const keyboardHide = () => {
     Keyboard.dismiss();
+    console.log(login);
+    console.log(email);
+    console.log(password);
     setLogin("");
     setEmail("");
     setPassword("");
@@ -46,18 +50,21 @@ export default function RegistrationScreen() {
   };
 
   const removeAvatar = () => {
-    setSelectedImage("");
+    setSelectedImage("login");
   };
 
+ 
+
   return (
-    <TouchableWithoutFeedback onPress={keyboardHide}>
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <View style={styles.container}>
         <ImageBackground source={wallpaper} style={styles.imgBg}>
           <KeyboardAvoidingView
             behavior={Platform.OS === "ios" ? "padding" : "height"}
-            keyboardVerticalOffset={Platform.OS === "ios" ? -97 : -80}
+            keyboardVerticalOffset={Platform.OS === "ios" ? -97 : -140}
             enable
           >
+          <ScrollView>
             <View style={styles.formBox}>
               {selectedImage ? (
                 <View style={styles.imgBox}>
@@ -93,6 +100,7 @@ export default function RegistrationScreen() {
                   onChangeText={setLogin}
                   value={login}
                   placeholder="Login"
+                  autoFocus 
                   onFocus={() => setFocus("login")}
                   onBlur={() => setFocus("")}
                 />
@@ -160,6 +168,7 @@ export default function RegistrationScreen() {
                 <Text style={styles.textAsk}>Do have an account? Sing in.</Text>
               </TouchableOpacity>
             </View>
+          </ScrollView>
           </KeyboardAvoidingView>
         </ImageBackground>
       </View>
