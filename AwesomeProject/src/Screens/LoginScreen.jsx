@@ -37,16 +37,18 @@ export default function LoginScreen() {
   };
 
   return (
-    <TouchableWithoutFeedback onPress={keyboardHide}>
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <View style={styles.container}>
         <ImageBackground source={wallpaper} style={styles.imgBg}>
+          {/* <KeyboardAwareScrollView> */}
           <KeyboardAvoidingView
-            behavior={Platform.OS === "ios" ? "padding" : "height"}
-            keyboardVerticalOffset={Platform.OS === "ios" ? -97 : -80}
-            enable
+
+          // behavior={Platform.OS === "ios" ? "padding" : "height"}
+          // keyboardVerticalOffset={Platform.OS === "ios" ? -97 : -100}
           >
             <View style={styles.formBox}>
               <Text style={styles.title}>Sing in</Text>
+
               <View
                 style={{
                   ...styles.inputBox,
@@ -107,6 +109,7 @@ export default function LoginScreen() {
                 </Text>
               </View>
             </View>
+            {/* </KeyboardAwareScrollView> */}
           </KeyboardAvoidingView>
         </ImageBackground>
       </View>
@@ -125,8 +128,17 @@ const styles = StyleSheet.create({
     justifyContent: "flex-end",
   },
 
+  keyboard: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "flex-end",
+
+    // height: "100%",
+    // width: "100%",
+  },
+
   formBox: {
-    marginTop: 300,
+    // marginTop: 300,
     alignItems: "center",
     gap: 16,
 

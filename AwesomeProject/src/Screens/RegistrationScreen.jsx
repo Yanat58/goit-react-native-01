@@ -8,6 +8,7 @@ import {
   ImageBackground,
   TouchableOpacity,
   KeyboardAvoidingView,
+  ScrollView,
   Keyboard,
   TouchableWithoutFeedback,
   Pressable,
@@ -18,11 +19,9 @@ import avatar from "../../assets/avatar.jpg";
 import open from "../../assets/open.png";
 import close from "../../assets/close.png";
 import { AntDesign } from "@expo/vector-icons";
-import symbolicateStackTrace from "react-native/Libraries/Core/Devtools/symbolicateStackTrace";
 
 export default function RegistrationScreen() {
   const { height, width } = useWindowDimensions();
-  console.log(height, width);
 
   const [login, setLogin] = useState("");
   const [email, setEmail] = useState("");
@@ -36,6 +35,9 @@ export default function RegistrationScreen() {
 
   const keyboardHide = () => {
     Keyboard.dismiss();
+    console.log("login:", login);
+    console.log("email:", email);
+    console.log("password:", password);
     setLogin("");
     setEmail("");
     setPassword("");
@@ -50,7 +52,7 @@ export default function RegistrationScreen() {
   };
 
   return (
-    <TouchableWithoutFeedback onPress={keyboardHide}>
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <View style={styles.container}>
         <ImageBackground source={wallpaper} style={styles.imgBg}>
           <KeyboardAvoidingView
@@ -58,108 +60,118 @@ export default function RegistrationScreen() {
             keyboardVerticalOffset={Platform.OS === "ios" ? -97 : -80}
             enable
           >
-            <View style={styles.formBox}>
-              {selectedImage ? (
-                <View style={styles.imgBox}>
-                  <Image source={avatar} style={styles.userImg} />
-                  <Pressable style={styles.iconBox} onPress={removeAvatar}>
-                    <AntDesign name="closecircleo" size={24} color="#d4d3d3" />
-                  </Pressable>
-                </View>
-              ) : (
-                <View style={styles.imgBox}>
-                  <Pressable style={styles.iconBox} onPress={addAvatar}>
-                    <AntDesign
-                      name="pluscircleo"
-                      size={24}
-                      color="#ff6c00"
-                      fill="ffffff"
-                      style={styles.icon}
-                    />
-                  </Pressable>
-                </View>
-              )}
+            <ScrollView>
+              <View style={styles.formBox}>
+                {selectedImage ? (
+                  <View style={styles.imgBox}>
+                    <Image source={avatar} style={styles.userImg} />
+                    <Pressable style={styles.iconBox} onPress={removeAvatar}>
+                      <AntDesign
+                        name="closecircleo"
+                        size={24}
+                        color="#d4d3d3"
+                      />
+                    </Pressable>
+                  </View>
+                ) : (
+                  <View style={styles.imgBox}>
+                    <Pressable style={styles.iconBox} onPress={addAvatar}>
+                      <AntDesign
+                        name="pluscircleo"
+                        size={24}
+                        color="#ff6c00"
+                        fill="ffffff"
+                        style={styles.icon}
+                      />
+                    </Pressable>
+                  </View>
+                )}
 
-              <Text style={styles.title}>Register</Text>
-              <View
-                style={{
-                  ...styles.inputBox,
-                  borderColor: focus === "login" ? "#ff6c00" : "#E8E8E8",
-                  backgroundColor: focus === "login" ? "#ffffff" : "#f6f6f6",
-                }}
-              >
-                <TextInput
-                  style={styles.input}
-                  onChangeText={setLogin}
-                  value={login}
-                  placeholder="Login"
-                  onFocus={() => setFocus("login")}
-                  onBlur={() => setFocus("")}
-                />
-              </View>
+                <Text style={styles.title}>Register</Text>
 
-              <View
-                style={{
-                  ...styles.inputBox,
-                  borderColor: focus === "email" ? "#ff6c00" : "#E8E8E8",
-                  backgroundColor: focus === "email" ? "#ffffff" : "#f6f6f6",
-                }}
-              >
-                <TextInput
-                  style={styles.input}
-                  onChangeText={setEmail}
-                  value={email}
-                  placeholder="Email"
-                  onFocus={() => setFocus("email")}
-                  onBlur={() => setFocus("")}
-                />
-              </View>
-
-              <View
-                style={{
-                  ...styles.inputBox,
-                  borderColor: focus === "password" ? "#ff6c00" : "#E8E8E8",
-                  backgroundColor: focus === "password" ? "#ffffff" : "#f6f6f6",
-                }}
-              >
-                <TextInput
-                  style={styles.input}
-                  onChangeText={setPassword}
-                  value={password}
-                  secureTextEntry={passwordHide}
-                  placeholder="Password"
-                  onFocus={() => setFocus("password")}
-                  onBlur={() => setFocus("")}
-                />
-                <TouchableOpacity
-                  activeOpacity={0.8}
-                  onPress={setPasswordVisibility}
+                <View
+                  style={{
+                    ...styles.inputBox,
+                    borderColor: focus === "login" ? "#ff6c00" : "#E8E8E8",
+                    backgroundColor: focus === "login" ? "#ffffff" : "#f6f6f6",
+                  }}
                 >
-                  <Image
-                    source={passwordHide ? open : close}
-                    style={styles.imgInput}
+                  <TextInput
+                    style={styles.input}
+                    onChangeText={setLogin}
+                    value={login}
+                    placeholder="Login"
+                    onFocus={() => setFocus("login")}
+                    onBlur={() => setFocus("")}
                   />
-                </TouchableOpacity>
-              </View>
+                </View>
 
-              <View style={styles.btnBox}>
+                <View
+                  style={{
+                    ...styles.inputBox,
+                    borderColor: focus === "email" ? "#ff6c00" : "#E8E8E8",
+                    backgroundColor: focus === "email" ? "#ffffff" : "#f6f6f6",
+                  }}
+                >
+                  <TextInput
+                    style={styles.input}
+                    onChangeText={setEmail}
+                    value={email}
+                    placeholder="Email"
+                    onFocus={() => setFocus("email")}
+                    onBlur={() => setFocus("")}
+                  />
+                </View>
+
+                <View
+                  style={{
+                    ...styles.inputBox,
+                    borderColor: focus === "password" ? "#ff6c00" : "#E8E8E8",
+                    backgroundColor:
+                      focus === "password" ? "#ffffff" : "#f6f6f6",
+                  }}
+                >
+                  <TextInput
+                    style={styles.input}
+                    onChangeText={setPassword}
+                    value={password}
+                    secureTextEntry={passwordHide}
+                    placeholder="Password"
+                    onFocus={() => setFocus("password")}
+                    onBlur={() => setFocus("")}
+                  />
+                  <TouchableOpacity
+                    activeOpacity={0.8}
+                    onPress={setPasswordVisibility}
+                  >
+                    <Image
+                      source={passwordHide ? open : close}
+                      style={styles.imgInput}
+                    />
+                  </TouchableOpacity>
+                </View>
+
+                <View style={styles.btnBox}>
+                  <TouchableOpacity
+                    style={styles.button}
+                    activeOpacity={0.8}
+                    onPress={keyboardHide}
+                  >
+                    <Text style={styles.btnText}>Sign up</Text>
+                  </TouchableOpacity>
+                </View>
+
                 <TouchableOpacity
-                  style={styles.button}
+                  style={styles.link}
                   activeOpacity={0.8}
                   onPress={keyboardHide}
                 >
-                  <Text style={styles.btnText}>Sign up</Text>
+                  <Text style={styles.textAsk}>
+                    Do have an account? Sing in.
+                  </Text>
                 </TouchableOpacity>
               </View>
-
-              <TouchableOpacity
-                style={styles.link}
-                activeOpacity={0.8}
-                onPress={keyboardHide}
-              >
-                <Text style={styles.textAsk}>Do have an account? Sing in.</Text>
-              </TouchableOpacity>
-            </View>
+            </ScrollView>
           </KeyboardAvoidingView>
         </ImageBackground>
       </View>
@@ -179,10 +191,11 @@ const styles = StyleSheet.create({
   },
 
   formBox: {
+    marginTop: 280,
     position: "relative",
-    marginTop: 300,
     alignItems: "center",
     gap: 16,
+    width: "100%",
 
     borderTopRightRadius: 25,
     borderTopLeftRadius: 25,
@@ -247,7 +260,7 @@ const styles = StyleSheet.create({
   },
 
   input: {
-    paddingRight: 150,
+    // paddingRight: 230,
     color: "#000000",
   },
 
