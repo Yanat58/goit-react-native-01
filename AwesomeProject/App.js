@@ -1,18 +1,26 @@
-import { StatusBar } from "expo-status-bar";
-import { Platform } from "react-native";
-import { endAsyncEvent } from "react-native/Libraries/Performance/Systrace";
+import 'react-native-gesture-handler';
+import React from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import { StatusBar } from 'expo-status-bar';
+import { Platform } from 'react-native';
 
-import RegistrationScreen from "./src/Screens/RegistrationScreen";
-import LoginScreen from "./src/Screens/LoginScreen";
+import RegistrationScreen from './src/Screens/auth/RegistrationScreen';
+import LoginScreen from './src/Screens/auth/LoginScreen';
+import Home from './src/Screens/Home';
+
+const MainStack = createStackNavigator();
 
 export default function App() {
   console.log(Platform.OS);
 
-  return (
-    <>
-      <RegistrationScreen />
-      {/* <LoginScreen /> */}
-      {/* <StatusBar style="auto" /> */}
-    </>
-  );
+    return (
+      <NavigationContainer>
+        <MainStack.Navigator initialRouteName="Register">
+          <MainStack.Screen options={{headerShown: false,}} name="Register" component={RegistrationScreen} />
+          <MainStack.Screen options={{headerShown: false,}} name="Login" component={LoginScreen} />
+          <MainStack.Screen options={{headerShown: false,}} name="Home" component={Home} />
+        </MainStack.Navigator>
+      </NavigationContainer>
+        );
 }
