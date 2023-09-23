@@ -10,22 +10,29 @@ import {
   KeyboardAvoidingView,
   Keyboard,
   ScrollView,
+  Alert,
   TouchableWithoutFeedback,
   Pressable,
   useWindowDimensions,
 } from 'react-native';
+import * as ImagePicker from 'expo-image-picker';
 import wallpaper from '../../../assets/bg.jpg';
 import avatar from '../../../assets/avatar.jpg';
 import open from '../../../assets/open.png';
 import close from '../../../assets/close.png';
 import { AntDesign } from '@expo/vector-icons';
 
+const initialData = {
+  login: '',
+  email: '',
+  password: '',
+  photo: '',
+};
+
 export default function RegistrationScreen({ navigation }) {
   const { height, width } = useWindowDimensions();
 
-  const [login, setLogin] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [formData, setFormData] = useState(initialData);
   const [passwordHide, setPasswordHide] = useState(true);
   const [selectedImage, setSelectedImage] = useState(null);
   const [focus, setFocus] = useState('');
@@ -33,26 +40,24 @@ export default function RegistrationScreen({ navigation }) {
     setPasswordHide(!passwordHide);
   };
 
+  const { login, email, password, photo } = formData;
+
   const onSubmit = () => {
-    if(!setLogin || setLogin.length < 4) {
-      Alert.alert("Login is required")
-
+    if (!login || login.length < 4) {
+      Alert.alert('Login is required');
+      return;
+    } else if (!email.includes('@')) {
+      Alert.alert("Your email has to include '@'");
+      return;
+    } else if (!password || password.length < 6) {
+      Alert.alert('Your password be more than 6 symbols');
+      return;
     }
-    else if(!setEmail.includes("@")){
-      Alert.alert("Your email has to include '@'")
-    } 
-    else if (!setPassword || setPassword.length <6) {
-      Alert.alert("Your password be more than 6 symbols")
 
-    }
-    navigation.navigate('Home')
+    navigation.navigate('Home');
     Keyboard.dismiss();
-    console.log(login);
-    console.log(email);
-    console.log(password);
-    setLogin('');
-    setEmail('');
-    setPassword('');
+    console.log(formData);
+    setFormData(initialData);
   };
 
   const addAvatar = () => {
@@ -95,6 +100,7 @@ export default function RegistrationScreen({ navigation }) {
                   </View>
                 )}
 
+
                 <Text style={styles.title}>Register</Text>
                 <View
                   style={{
@@ -105,10 +111,11 @@ export default function RegistrationScreen({ navigation }) {
                 >
                   <TextInput
                     style={styles.input}
-                    onChangeText={setLogin}
+                    onChangeText={value =>
+                      setFormData(prevState => ({ ...prevState, login: value }))
+                    }
                     value={login}
                     placeholder="Login"
-                    autoFocus
                     onFocus={() => setFocus('login')}
                     onBlur={() => setFocus('')}
                   />
@@ -123,7 +130,9 @@ export default function RegistrationScreen({ navigation }) {
                 >
                   <TextInput
                     style={styles.input}
-                    onChangeText={setEmail}
+                    onChangeText={value =>
+                      setFormData(prevState => ({ ...prevState, email: value }))
+                    }
                     value={email}
                     placeholder="Email"
                     onFocus={() => setFocus('email')}
@@ -140,7 +149,9 @@ export default function RegistrationScreen({ navigation }) {
                 >
                   <TextInput
                     style={styles.input}
-                    onChangeText={setPassword}
+                    onChangeText={value =>
+                      setFormData(prevState => ({ ...prevState, password: value }))
+                    }
                     value={password}
                     secureTextEntry={passwordHide}
                     placeholder="Password"
@@ -153,20 +164,19 @@ export default function RegistrationScreen({ navigation }) {
                 </View>
 
                 <View style={styles.btnBox}>
-                  <TouchableOpacity
-                    style={styles.button}
-                    activeOpacity={0.8}
-                    onPress={onSubmit}
-                  >
+                  <TouchableOpacity style={styles.button} activeOpacity={0.8} onPress={onSubmit}>
                     <Text style={styles.btnText}>Sign up</Text>
                   </TouchableOpacity>
                 </View>
 
-                <TouchableOpacity onPress={() => navigation.navigate('Login')} style={styles.textBox}>
-                   <Text style={styles.textAsk}>Do have an account? 
-                 
+                <TouchableOpacity
+                  onPress={() => navigation.navigate('Login')}
+                  style={styles.textBox}
+                >
+                  <Text style={styles.textAsk}>
+                    Do have an account?
                     <Text style={styles.textLink}> Sing in.</Text>
-                </Text>
+                  </Text>
                 </TouchableOpacity>
               </View>
             </ScrollView>
@@ -184,6 +194,7 @@ const styles = StyleSheet.create({
 
   imgBg: {
     flex: 1,
+    flexDirection: 'column',
     resizeMode: 'cover',
     justifyContent: 'flex-end',
   },
@@ -193,6 +204,7 @@ const styles = StyleSheet.create({
     marginTop: 250,
     alignItems: 'center',
     gap: 16,
+    paddingHorizontal: 16,
 
     borderTopRightRadius: 25,
     borderTopLeftRadius: 25,
@@ -216,11 +228,11 @@ const styles = StyleSheet.create({
   },
 
   iconBox: {
+    position: 'absolute',
     width: 24,
     height: 24,
     borderRadius: 15,
     backgroundColor: '#fff',
-    position: 'absolute',
     top: 75,
     right: -12,
   },
@@ -240,7 +252,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    width: '85%',
+    width: '95%',
     height: 50,
     paddingHorizontal: 16,
     borderWidth: 1,
@@ -252,17 +264,14 @@ const styles = StyleSheet.create({
   imgInput: {
     width: 30,
     height: 15,
-    marginLeft: 'auto',
-    marginRight: 6,
   },
 
   input: {
-    paddingRight: 150,
     color: '#000000',
   },
 
   btnBox: {
-    width: '85%',
+    width: '95%',
   },
   button: {
     marginTop: 27,
