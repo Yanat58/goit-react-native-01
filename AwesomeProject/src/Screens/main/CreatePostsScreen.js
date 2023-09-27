@@ -4,6 +4,7 @@ import { Camera } from 'expo-camera';
 import * as Location from 'expo-location';
 import { Ionicons, Fontisto } from '@expo/vector-icons';
 import { TextInput } from 'react-native-gesture-handler';
+import { useIsFocused } from '@react-navigation/native';
 
 const initialData = {
   namePhoto: '',
@@ -15,8 +16,8 @@ function CreatePostsScreen({ navigation }) {
   const [photo, setPhoto] = useState(null);
   const [formData, setFormData] = useState(initialData);
   const [locationCoords, setLocationCoords] = useState(null);
-
   const { namePhoto, location } = formData;
+  const isFocused = useIsFocused;
 
   useEffect(() => {
     (async () => {
@@ -32,7 +33,7 @@ function CreatePostsScreen({ navigation }) {
   const takePhoto = async () => {
     try {
       const photo = await camera.takePictureAsync();
-    // console.log('camera:', photo.uri)
+      // console.log('camera:', photo.uri)
       setPhoto(photo.uri);
 
       const location = await Location.getCurrentPositionAsync();
@@ -72,15 +73,23 @@ function CreatePostsScreen({ navigation }) {
 
       <ScrollView>
         <View style={styles.mainBox}>
-          <Camera style={styles.photoBox} ref={setCamera}>
-            <TouchableOpacity style={styles.cameraIcon} onPress={takePhoto}>
-              <Fontisto name="camera" size={24} color={photo ? '#fff' : '#BDBDBD'} />
-            </TouchableOpacity>
-          </Camera>
-          {photo ? (
-            <Text style={styles.cameraText}>Edit photo</Text>
+          {!photo && isFocused ? (
+            <>
+              <Camera style={styles.photoBox} ref={setCamera}>
+                <TouchableOpacity style={styles.cameraIcon} onPress={takePhoto}>
+                  <Fontisto name="camera" size={24} color={photo ? '#fff' : '#BDBDBD'} />
+                </TouchableOpacity>
+              </Camera>
+              <Text style={styles.cameraText}>Upload photo</Text>
+            </>
           ) : (
-            <Text style={styles.cameraText}>Upload photo</Text>
+            <View >
+              <Image style={styles.photoBox} source={{ uri: photo }} resizeMode="cover" />
+              <TouchableOpacity style={styles.cameraIcon}>
+                <Fontisto name="camera" size={24} color="#fff" />
+              </TouchableOpacity>
+              <Text style={styles.cameraText}>Edit photo</Text>
+            </View>
           )}
 
           <View style={styles.textInput}>
@@ -165,10 +174,10 @@ const styles = StyleSheet.create({
   },
 
   photoBox: {
+    position: 'relative',
     marginTop: 32,
     marginBottom: 8,
-    position: 'relative',
-    width: '98%',
+    width: '100%',
     height: 240,
     backgroundColor: '#F6F6F6',
     alignItems: 'center',
@@ -180,11 +189,20 @@ const styles = StyleSheet.create({
 
   cameraIcon: {
     position: 'absolute',
-    top: 90,
-    left: '43%',
+    top: '50%',
+    left: '50%',
+    transform: [{ translateX: -35 }, { translateY: -35 }],
     borderRadius: 60,
     padding: 18,
     backgroundColor: 'rgba(255, 255, 255, 0.3)',
+    zIndex: 100,
+  },
+
+  img: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 8,
   },
 
   cameraText: {
@@ -245,13 +263,13 @@ const styles = StyleSheet.create({
     color: '#BDBDBD',
   },
 
-  takePictureContainer: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    borderColor: '#fff',
-    borderWidth: 1,
-  },
+  // takePictureContainer: {
+  //   position: 'absolute',
+  //   top: 0,
+  //   left: 0,
+  //   borderColor: '#fff',
+  //   borderWidth: 1,
+  // },
 });
 
 export default CreatePostsScreen;

@@ -4,12 +4,19 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { StatusBar } from 'expo-status-bar';
 import { Platform } from 'react-native';
+// import * as Font from 'expo-font';
 
 import RegistrationScreen from './src/Screens/auth/RegistrationScreen';
 import LoginScreen from './src/Screens/auth/LoginScreen';
 import Home from './src/Screens/main/Home';
 
 const MainStack = createStackNavigator();
+
+// const loadApplication = async () => {
+//   await Font.loadAsync({
+//     'Roboto-Regular': require('./assets/fonts/Roboto-regular.ttf'),
+//   })
+// }
 
 export default function App() {
   console.log(Platform.OS);

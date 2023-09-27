@@ -66,7 +66,7 @@ const styles = StyleSheet.create({
 
   title: {
     paddingVertical: 11,
-    marginRight: '33%',
+    marginRight: '35%',
     fontWeight: 500,
     fontSize: 17,
     color: '#212121',
@@ -81,6 +81,7 @@ const styles = StyleSheet.create({
   mainBox: {
     flex: 1,
     paddingHorizontal: 16,
+    paddingBottom: 16,
   },
 
   photo: {

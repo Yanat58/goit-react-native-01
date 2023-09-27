@@ -1,6 +1,7 @@
 import React from "react";
 import { View,  StyleSheet } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { getFocusedRouteNameFromRoute, useNavigation } from '@react-navigation/native';
 import {AntDesign, Octicons, Feather} from '@expo/vector-icons';
 import PostsScreen from "./PostsScreen";
 import ProfileScreen from "./ProfileScreen";
@@ -10,6 +11,13 @@ import CreatePostsScreen from "./CreatePostsScreen";
 const Tab = createBottomTabNavigator();
 
 export default function Home (){
+  const navigation = useNavigation;
+
+  const getTabBarStyle = (route) => {
+    const routeName = getFocusedRouteNameFromRoute(route) ?? 'Home';
+  let display = (routeName === 'Comments') ? 'none' : 'flex';
+  return {display}
+  }
 
   return(
     <Tab.Navigator 
@@ -26,9 +34,9 @@ export default function Home (){
 <Tab.Screen  
 name="Post" 
 component={PostsScreen}
- options={{tabBarIcon: ({focused, size, color}) => 
+ options={ ({route}) => ({tabBarStyle: getTabBarStyle(route) , tabBarIcon: ({focused, size, color}) => 
 (<AntDesign name="appstore-o" size={size} color={color} focused={focused} />)
-}}
+})}
  /> 
 
 <Tab.Screen 
