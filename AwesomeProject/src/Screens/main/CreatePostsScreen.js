@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, TouchableOpacity, StyleSheet, ScrollView, Image } from 'react-native';
+import { Camera } from 'expo-camera';
+import * as Location from 'expo-location';
 import { Ionicons, Fontisto } from '@expo/vector-icons';
 import { TextInput } from 'react-native-gesture-handler';
 
@@ -8,11 +9,57 @@ const initialData = {
   namePhoto: '',
   location: '',
 };
+
 function CreatePostsScreen({ navigation }) {
+  const [camera, setCamera] = useState(null);
+  const [photo, setPhoto] = useState(null);
   const [formData, setFormData] = useState(initialData);
-  const [focus, setFocus] = useState('');
+  const [locationCoords, setLocationCoords] = useState(null);
 
   const { namePhoto, location } = formData;
+
+  useEffect(() => {
+    (async () => {
+      const { status } = await Location.requestForegroundPermissionsAsync();
+
+      if (status !== 'granted') {
+        setErrorMsg('Permission to access location was denied');
+        return;
+      }
+    })();
+  }, []);
+
+  const takePhoto = async () => {
+    try {
+      const photo = await camera.takePictureAsync();
+    // console.log('camera:', photo.uri)
+      setPhoto(photo.uri);
+
+      const location = await Location.getCurrentPositionAsync();
+      // console.log('creatLocation:', location);
+      // console.log('latitude', location.coords.latitude);
+      // console.log('longitude', location.coords.longitude);
+
+      const coords = {
+        latitude: location.coords.latitude,
+        longitude: location.coords.longitude,
+      };
+      setLocationCoords(coords);
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+  const sendPhoto = () => {
+    if (photo) {
+      navigation.navigate('DefaultScreen', { photo, locationCoords, formData });
+      clearPostPhoto();
+    }
+  };
+
+  const clearPostPhoto = () => {
+    setPhoto('');
+    setFormData(initialData);
+  };
 
   return (
     <View style={styles.container}>
@@ -22,21 +69,28 @@ function CreatePostsScreen({ navigation }) {
         </TouchableOpacity>
         <Text style={styles.title}>CreatePosts</Text>
       </View>
+
       <ScrollView>
         <View style={styles.mainBox}>
-          <View style={styles.photoBox}>
-            <Fontisto name="camera" size={24} color="#BDBDBD" style={styles.cameraIcon} />
-          </View>
-          <Text style={styles.cameraText}>Add photo</Text>
+          <Camera style={styles.photoBox} ref={setCamera}>
+            <TouchableOpacity style={styles.cameraIcon} onPress={takePhoto}>
+              <Fontisto name="camera" size={24} color={photo ? '#fff' : '#BDBDBD'} />
+            </TouchableOpacity>
+          </Camera>
+          {photo ? (
+            <Text style={styles.cameraText}>Edit photo</Text>
+          ) : (
+            <Text style={styles.cameraText}>Upload photo</Text>
+          )}
+
           <View style={styles.textInput}>
             <TextInput
               onChangeText={value => setFormData(prevState => ({ ...prevState, namePhoto: value }))}
               value={namePhoto}
               placeholder="Name..."
-              onFocus={() => setFocus('login')}
-              onBlur={() => setFocus('')}
             />
           </View>
+
           <View style={styles.inputBox}>
             <Ionicons
               name="md-location-outline"
@@ -49,21 +103,23 @@ function CreatePostsScreen({ navigation }) {
               onChangeText={value => setFormData(prevState => ({ ...prevState, location: value }))}
               value={location}
               placeholder="Location..."
-              onFocus={() => setFocus('location')}
-              onBlur={() => setFocus('')}
             />
           </View>
           <TouchableOpacity
-            style={styles.button}
+            style={{
+              ...styles.button,
+              backgroundColor: photo ? 'rgba(255, 108, 0, 1)' : '#F6F6F6',
+            }}
             activeOpacity={0.8}
-            // onPress={onSubmit}
+            onPress={sendPhoto}
           >
-            <Text style={styles.btnText}>Publish</Text>
+            <Text style={{ ...styles.btnText, color: photo ? '#fff' : '#BDBDBD' }}>Publish</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
             activeOpacity={0.8}
-            // onPress={clearScreen}
+            onPress={clearPostPhoto}
+            style={styles.trashIconBox}
           >
             <Ionicons name="ios-trash-outline" size={24} color="black" style={styles.trashIcon} />
           </TouchableOpacity>
@@ -128,7 +184,7 @@ const styles = StyleSheet.create({
     left: '43%',
     borderRadius: 60,
     padding: 18,
-    backgroundColor: '#fff',
+    backgroundColor: 'rgba(255, 255, 255, 0.3)',
   },
 
   cameraText: {
@@ -164,22 +220,37 @@ const styles = StyleSheet.create({
   },
 
   button: {
-    marginBottom: 80,
+    marginBottom: 120,
     marginTop: 24,
-    width: '98%',
+    width: '100%',
     paddingVertical: 16,
     borderRadius: 100,
-    backgroundColor: '#F6F6F6',
   },
 
   btnText: {
     textAlign: 'center',
-    color: '#BDBDBD',
+  },
+
+  trashIconBox: {
+    alignSelf: 'center',
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: 70,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: '#F6F6F6',
   },
 
   trashIcon: {
-    alignSelf: 'center',
     color: '#BDBDBD',
+  },
+
+  takePictureContainer: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    borderColor: '#fff',
+    borderWidth: 1,
   },
 });
 

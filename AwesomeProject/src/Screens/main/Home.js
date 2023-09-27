@@ -1,7 +1,7 @@
 import React from "react";
 import { View,  StyleSheet } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import {AntDesign, Octicons, Feather } from '@expo/vector-icons';
+import {AntDesign, Octicons, Feather} from '@expo/vector-icons';
 import PostsScreen from "./PostsScreen";
 import ProfileScreen from "./ProfileScreen";
 import CreatePostsScreen from "./CreatePostsScreen";
@@ -10,6 +10,7 @@ import CreatePostsScreen from "./CreatePostsScreen";
 const Tab = createBottomTabNavigator();
 
 export default function Home (){
+
   return(
     <Tab.Navigator 
     style={styles.tabBar}
@@ -26,11 +27,8 @@ export default function Home (){
 name="Post" 
 component={PostsScreen}
  options={{tabBarIcon: ({focused, size, color}) => 
-(<AntDesign name="appstore-o" size={size} color={color}  />
- ),
- 
+(<AntDesign name="appstore-o" size={size} color={color} focused={focused} />)
 }}
-
  /> 
 
 <Tab.Screen 
@@ -38,11 +36,11 @@ component={PostsScreen}
   component={CreatePostsScreen} 
   options={{tabBarIcon: ({focused, size, color}) => (
     <View style={styles.iconBox}>
-      <Octicons name="plus" size={size} color="#fff" />
+      <Octicons name="plus" size={size} color="#fff"  focused={focused}/>
      </View>
     ), 
     tabBarVisibilite: false,
-    // tabBarStyle:{display: none},
+    tabBarStyle:{display: 'none'},
 }}
   />
 
@@ -50,7 +48,7 @@ component={PostsScreen}
 <Tab.Screen 
  name="Profile"
   component={ProfileScreen} 
-  options={{tabBarIcon: ({focused, size, color}) => (<Feather name="user" size={size} color={color} />)}}
+  options={{tabBarIcon: ({focused, size, color}) => (<Feather name="user" size={size} color={color}  focused={focused}/>)}}
   />
     </Tab.Navigator>
 

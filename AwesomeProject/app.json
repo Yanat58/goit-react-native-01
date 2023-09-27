@@ -11,6 +11,34 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
+    "plugins": [
+      [
+        "expo-media-library",
+        {
+          "photosPermission": "Allow APP to access your photos.",
+          "savePhotosPermission": "Allow APP to save photos.",
+          "isAccessMediaLocationEnabled": true
+        }
+      ],
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Allow APP to access your camera."
+        }
+      ], 
+      [
+        "expo-location",
+        {
+          "locationAlwaysAndWhenInUsePermission": "Allow APP to use your location."
+        }
+      ], 
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "The app accesses your photos to let you share them with your friends."
+        }
+      ]
+    ],
     "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true

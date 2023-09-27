@@ -26,8 +26,7 @@ const initialData = {
   login: '',
   email: '',
   password: '',
-  photo: '',
-};
+ };
 
 export default function RegistrationScreen({ navigation }) {
   const { height, width } = useWindowDimensions();
@@ -40,7 +39,8 @@ export default function RegistrationScreen({ navigation }) {
     setPasswordHide(!passwordHide);
   };
 
-  const { login, email, password, photo } = formData;
+  const { login, email, password} = formData;
+  console.log(login)
 
   const onSubmit = () => {
     if (!login || login.length < 4) {
